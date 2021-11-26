@@ -133,7 +133,7 @@ void Matrix::solveEquations(vector<vector<double>>& mat, vector<double>& b, vect
     }
 }
 
-double getNorm(vector<double> vec) {
+double Matrix::getNorm(vector<double> vec) {
     double temp = 0;
     for(int i = 0; i < matSize; i++) {
         if(temp < fabs(vec[i])) {
@@ -146,7 +146,6 @@ double getNorm(vector<double> vec) {
 
 //Newton法解非线性方程组
 void  Matrix::Newton(vector<double>& x, vector<double> offset) {
-    char a;
     vector<double> delta_x = vector<double>(matSize + 1);
     vector<double> tempx = vector<double>(matSize + 1);
     vector<double> F = vector<double>(matSize + 1);

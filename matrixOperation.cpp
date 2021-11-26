@@ -14,53 +14,84 @@ double sgn(double n) {
     }
 }
 
+vector<vector<double>> transposeMat(vector<vector<double>> A) {
+    vector<vector<double>> A_T;
+    for (int i = 0; i < A[0].size(); i++) {
+        A_T.push_back(vector<double>(A.size()));
+    }
+    for (int i = 0; i < A.size(); i++) {
+        for (int j = 0; j < A[i].size(); j++) {
+            A_T[j][i] = A[i][j];
+        }
+    }
+}
 
+void matrixMult(vector<vector<double>>& ma, vector<vector<double>>& mb, vector<vector<double>>& ms)  {
+    for (int i = 0; i < ma.size(); i++) {
+        ms.push_back(vector<double>(mb[i].size()));
+        for (int j = 0; j < mb[i].size(); j++) {
+            ms[i][j] = 0;
+            for (int k = 0; k < mb.size(); k++) {
+                ms[i][j] += ma[i][k] * mb[k][j];
+            }
+        }
+    }
+}
 
 //曲面拟合
-double *fitSurface(vector<double> z, int &kvalue) {
+double *fitSurface(vector<vector<double>> z, int &kvalue) {
     int xs = 11, ys = 21, num = 9;
-    vector<double> B = vector<double>(xs * num);
-    vector<double> G = vector<double>(ys * num);
-    vector<double> P = vector<double>(xs * ys);
-    vector<double> B_temp = vector<double>(xs * num);
-    vector<double> G_temp = vector<double>(ys * num);
-    vector<double> B_T = vector<double>(xs * num);
-    vector<double> G_T = vector<double>(ys * num);
-    vector<double> BB = vector<double>(xs * num);
-    vector<double> GG = vector<double>(ys * num);
-    vector<double> C = vector<double>(xs * ys);
+    vector<vector<double>> B, G, P, C;
+    for (int i = 0; i < num; i++) {
+        B.push_back(vector<double>(xs));
+        G.push_back(vector<double>(ys));
+    }
 
-    for(int i = 0; i < num; i++) {
-        for(int j = 0; j < xs; j++) {
-            B[j * num + i] = pow(0.08 * j, i);
+    for (int i = 0; i < num; i++) {
+        for (int j = 0; j < xs; j++) {
+            B[i][j] = pow(0.08 * j, i);
         }
-        for(int j = 0; j < ys; j++) {
-            G[j * num + i] = pow(0.5 + 0.05 * j, i);
+        for (int j = 0; j < ys; j++) {
+            G[i][j] = pow(0.5 + 0.05 * j, i);
         }
     }
 
     double sigma = 0;
     cout << endl << "选择过程的k和sigma值" << endl;
-    for(int i = 0; i < num; i++) {
+    for (int i = 0; i < num; i++) {
         sigma = 0;
-        copyMat(B, xs, i+1, num, B_temp);
-        transposeMat(B_temp, xs, i+1, B_T);
-        multiplyMat(B_T, B_temp, i+1, xs, i+1, BB);
+        vector<vector<double>> B_temp;
+        vector<vector<double>> G_temp;
+        for (int j = 0; j < i; j++) {
+            B_temp.push_back(B[j]);
+            G_temp.push_back(G[j]);
+        }
+
+        vector<vector<double>> B_T = transposeMat(B_temp);
+        vector<vector<double>> G_T = transposeMat(G_temp);
+
+        vector<vector<double>> BB, GG;
+        matrixMult(B_T, B_temp, BB);
+        matrixMult(G_T, G_temp, GG);
+
         inverseMat(BB, i+1, B_temp);
-        copyMat(G, ys, i+1, num, G_temp);
-        transposeMat(G_temp, ys, i+1, G_T);
-        multiplyMat(G_T, G_temp, i+1, ys, i+1, GG);
         inverseMat(GG, i+1, G_T);
-        multiplyMat(B_temp, B_T, i+1, i+1, xs, BB);
-        multiplyMat(BB, z, i+1, xs, ys, GG);
-        multiplyMat(GG, G_temp, i+1, ys, i+1, BB);
-        multiplyMat(BB, G_T, i+1, i+1, i+1, C);
+
+        matrixMult(B_temp, B_T, BB);
+        matrixMult(BB, z, GG);
+        matrixMult(GG, G_temp, BB);
+        matrixMult(BB, G_T, C);
+
         for(int j = 0; j < xs; j++) {
             for(int k = 0; k < ys; k++) {
                 double temp = 0;
-                for(int p = 0; p < i+1; p++)
-                    for(int q = 0; q < i+1; q++)
-                        temp += C[p*(i+1)+q]*B[j*num+p]*G[k*num+q];
+                for(int p = 0; p < i+1; p++) {
+                    for(int q = 0; q < i+1; q++) {
+                        temp += C[p * (i + 1) + q] * B[j * num + p] * G[k * num + q];
+                    }
+
+                }
+
                 P[j*ys+k] = temp;
                 sigma += (z[j*ys+k]-temp)*(z[j*ys+k]-temp);
             }

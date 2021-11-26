@@ -22,6 +22,6 @@ struct ComplexNumber {
 
 double sgn(double);
 
-const static string answerPath = "C:\\Users\\lee\\Desktop\\math\\matrix2\\answer.txt";
+const static string answerPath = "C:\\Users\\lee\\Desktop\\math\\matrix3\\answer.txt";
 
 #endif //MATRIX_MATRIXOPERATION_H
