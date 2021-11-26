@@ -4,13 +4,9 @@
 
 #include "matrixOperation.h"
 
-double sgn(double n) {
-    if (n > 0) {
-        return 1;
-    } else if (n < 0) {
-        return -1;
-    } else {
-        return 0;
+void initMat(vector<vector<double>>& mat, int m, int n) {
+    for (int i = 0; i < m; i++) {
+        mat.push_back(vector<double>(n));
     }
 }
 
@@ -26,7 +22,8 @@ vector<vector<double>> transposeMat(vector<vector<double>> A) {
     }
 }
 
-void matrixMult(vector<vector<double>>& ma, vector<vector<double>>& mb, vector<vector<double>>& ms)  {
+void matrixMult(vector<vector<double>> ma, vector<vector<double>> mb, vector<vector<double>>& ms)  {
+    ms = vector<vector<double>>();
     for (int i = 0; i < ma.size(); i++) {
         ms.push_back(vector<double>(mb[i].size()));
         for (int j = 0; j < mb[i].size(); j++) {
@@ -38,8 +35,58 @@ void matrixMult(vector<vector<double>>& ma, vector<vector<double>>& mb, vector<v
     }
 }
 
+void inverseMat(vector<vector<double>> A, vector<vector<double>> result)
+{
+    vector<vector<double>> A_temp = A;
+    for(int i = 0; i < A.size(); i++)
+        for(int j = 0; j < A.size(); j++) {
+            if(i != j) {
+                result[i][j] = 0;
+            } else {
+                result[i][j] = 1;
+            }
+        }
+
+    for(int i = 0; i < A.size(); i++) {
+        int index = i;
+        for (int j = i + 1; j < A.size(); j++) {
+            if (abs(A_temp[j][i]) > abs(A_temp[index][i])) {
+                index = j;
+            }
+        }
+
+        if (index != i) {
+            for(int j = 0; j < A.size(); j++) {
+                double temp = A_temp[index][j];
+                A_temp[index][j] = A_temp[i][j];
+                A_temp[i][j] = temp;
+                temp = result[index][j];
+                result[index][j] = result[i][j];
+                result[i][j] = temp;
+            }
+        }
+
+        double temp = A_temp[i][i];
+        if (temp != 1) {
+            for(int j = 0; j < A.size(); j++) {
+                A_temp[i][j] /= temp;
+                result[i][j] /= temp;
+            }
+        }
+        for (int j = 0; j < A.size(); j++) {
+            if (A_temp[j][i] != 0 && i != j) {
+                temp = A_temp[j][i];
+                for (int k = 0; k < A.size(); k++) {
+                    A_temp[j][k] -= temp * A_temp[i][k];
+                    result[j][k] -= temp * result[i][k];
+                }
+            }
+        }
+    }
+}
+
 //曲面拟合
-double *fitSurface(vector<vector<double>> z, int &kvalue) {
+vector<vector<double>> fitSurface(vector<vector<double>> z, int& kvalue) {
     int xs = 11, ys = 21, num = 9;
     vector<vector<double>> B, G, P, C;
     for (int i = 0; i < num; i++) {
@@ -71,11 +118,11 @@ double *fitSurface(vector<vector<double>> z, int &kvalue) {
         vector<vector<double>> G_T = transposeMat(G_temp);
 
         vector<vector<double>> BB, GG;
-        matrixMult(B_T, B_temp, BB);
-        matrixMult(G_T, G_temp, GG);
+        matrixMult(B_temp, B_T, BB);
+        matrixMult(G_temp, G_T, GG);
 
-        inverseMat(BB, i+1, B_temp);
-        inverseMat(GG, i+1, G_T);
+        inverseMat(BB, B_temp);
+        inverseMat(GG, G_T);
 
         matrixMult(B_temp, B_T, BB);
         matrixMult(BB, z, GG);
@@ -87,13 +134,14 @@ double *fitSurface(vector<vector<double>> z, int &kvalue) {
                 double temp = 0;
                 for(int p = 0; p < i+1; p++) {
                     for(int q = 0; q < i+1; q++) {
-                        temp += C[p * (i + 1) + q] * B[j * num + p] * G[k * num + q];
+                        //TODO: maybe bug
+                        temp += C[p][q] * B[j][p] * G[k][q];
                     }
 
                 }
 
-                P[j*ys+k] = temp;
-                sigma += (z[j*ys+k]-temp)*(z[j*ys+k]-temp);
+                P[j][k] = temp;
+                sigma += (z[j][k] - temp) * (z[j][k] - temp);
             }
         }
         cout << "k = " << i << setprecision(11) << setiosflags(ios::scientific|ios::uppercase) << " sigma = " << sigma << endl;
@@ -104,11 +152,74 @@ double *fitSurface(vector<vector<double>> z, int &kvalue) {
             cout << endl << "p(x, y)中的系数Crs" << endl;
             for(int k = 0; k <= i; k++) {
                 for(int j = 0; j <= i; j++) {
-                    cout << "C[" << k << "][" << j << "] = " << C[k*(i+1)+j] << endl;
+                    cout << "C[" << k << "][" << j << "] = " << C[k][j] << endl;
                 }
             }
             return C;
         }
     }
-    return NULL;
+    return vector<vector<double>>();
+}
+
+void interpolate(vector<vector<double>>& t, vector<vector<double>>& u, vector<vector<double>>& z, int xs, int ys) {
+    vector<double> tt = {0, 0.2, 0.4, 0.6, 0.8, 1};
+    vector<double> uu = {0, 0.4, 0.8, 1.2, 1.6, 2};
+    vector<vector<double>> zz = {{-0.5, -0.34, 0.14, 0.94, 2.06, 3.5},
+                                 {-0.42, -0.5, -0.26, 0.3, 1.18, 2.38},
+                                 {-0.18, -0.5, -0.5, -0.18, 0.46, 1.42},
+                                 {0.22, -0.34, -0.58, -0.5, -0.1, 0.62},
+                                 {0.78, -0.02, -0.5, -0.66, -0.5, -0.02},
+                                 {1.5, 0.46, -0.26, -0.66, -0.74, -0.5}};
+    double h = 0.2, tao = 0.4;
+    int n = 5, m = 5;
+    for(int i = 0; i < xs; i++) {
+        for(int j = 0; j < ys; j++) {
+
+            int xp = 0, yp = 0;
+            if(t[i][j] <= tt[1] + h / 2) {
+                xp = 1;
+            }
+
+            else if(t[i][j] > tt[n-1]-h/2) {
+                xp = n-1;
+            }
+
+            else {
+                for(int q = 2; q <= n-2; q++) {
+                    if(t[i][j] > tt[q] - h / 2 && t[i][j] <= tt[q] + h / 2) {
+                        xp = q;
+                    }
+                }
+
+            }
+            if(u[i][j] <= uu[1] + tao / 2) {
+                yp = 1;
+            } else if(u[i][j] > uu[m - 1] - tao / 2) {
+                yp = n-1;
+            } else {
+                for(int q = 2; q <= m-2; q++) {
+                    if((u[i][j] > uu[q] - tao / 2) && (u[i][j] <= uu[q] + tao / 2)) {
+                        yp = q;
+                    }
+                }
+            }
+            z[i][j] = 0;
+            for(int k = xp - 1; k <= xp + 1; k++) {
+                double lk = 1;
+                for(int ti = xp-1; ti <= xp + 1; ti++) {
+                    if(ti != k) {
+                        lk *= (t[i][j] - tt[ti]) / (tt[k] - tt[ti]);
+                    }
+                }
+                for(int r = yp - 1; r <= yp + 1; r++) {
+                    double lr = 1;
+                    for(int ti = yp - 1; ti <= yp + 1; ti++) {
+                        if(ti != r)
+                            lr *= (u[i][j] - uu[ti]) / (uu[r] - uu[ti]);
+                    }
+                    z[i][j] += lk * lr * zz[k][r];
+                }
+            }
+        }
+    }
 }
