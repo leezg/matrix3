@@ -11,11 +11,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ae7a79e-f3ef-410e-aaa1-4169dd005cbf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+    <list default="true" id="5ae7a79e-f3ef-410e-aaa1-4169dd005cbf" name="Changes" comment="partly finished">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matrixOperation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/matrixOperation.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matrixOperation.h" beforeDir="false" afterPath="$PROJECT_DIR$/matrixOperation.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,11 +67,34 @@
       <option name="presentableId" value="Default" />
       <updated>1637937653813</updated>
       <workItem from="1637937655411" duration="1399000" />
-      <workItem from="1637939096494" duration="491000" />
+      <workItem from="1637939096494" duration="746000" />
     </task>
+    <task id="LOCAL-00001" summary="partly finished">
+      <created>1637939640249</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1637939640249</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="partly finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="partly finished" />
   </component>
 </project>
