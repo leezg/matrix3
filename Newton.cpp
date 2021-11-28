@@ -1,76 +1,15 @@
 //
-// Created by lee on 2021/10/26.
+// Created by lee on 2021/11/28.
 //
-#include "matrix.h"
 
-vector<double> numA;
+#include "Newton.h"
 
-Matrix::Matrix() { //矩阵初始化
-    initMatrixA(matrixA);
-    fp = fopen(answerPath.c_str(), "w+");
+Newton::Newton() {
+
 }
-
-void Matrix:: matrixMult(vector<vector<double>>& ma, vector<vector<double>>& mb, vector<vector<double>>& ms)  {
-    for (int i = 0; i < matSize; i++) {
-        for (int j = 0; j < matSize; j++) {
-            ms[i][j] = 0;
-            for (int k = 0; k < matSize; k++) {
-                ms[i][j] += ma[i][k] * mb[k][j];
-            }
-        }
-    }
-}
-
-void Matrix::printMatrix() {
-    for (int i = 0; i < matSize; i++) {
-        for (int j = 0; j < matSize; j++) {
-            fprintf(fp,"%20.12e,", matrixA[i][j]);
-            if (j == 4) {
-                fprintf(fp, "\n");
-            }
-        }
-        fprintf(fp, "\n");
-    }
-}
-
-void Matrix::printMatrix(vector<vector<double>> matrixA) {
-    for (int i = 0; i < matSize; i++) {
-        for (int j = 0; j < matSize; j++) {
-            fprintf(fp,"%20.12e,", matrixA[i][j]);
-            if (j == 4) {
-                fprintf(fp, "\n");
-            }
-        }
-        fprintf(fp, "\n");
-    }
-}
-
-void Matrix::zeroMatrix(vector<vector<double>> &matrix) {
-    for(int i = 0; i < matSize; i++) {
-        for (int j = 0; j < matSize; j++) {
-            if (abs(matrix[i][j])  < E) {
-                matrix[i][j] = 0;
-            }
-        }
-    }
-}
-
-void Matrix::initMatrixA(vector<vector<double>> &matrixA) {
-    for (int i = 0; i < matSize; i++) {
-        matrixA.push_back(vector<double>());
-        for (int j = 0; j < matSize; j++) {
-            if (i != j) {
-                matrixA[i].push_back(sin(0.5 * (i + 1) + 0.2 * (j + 1)));
-            } else {
-                matrixA[i].push_back(1.52 * cos((i + 1) + 1.2 * (j + 1)));
-            }
-        }
-    }
-}
-
 
 //获得F的值的向量
-void Matrix::getFValue(vector<double>& b, vector<double> offset, vector<double> x) {
+void Newton::getFValue(vector<double>& b, vector<double> offset, vector<double> x) {
     b[1] = -(0.5 * cos(x[1]) + x[2] + x[3] + x[4] - offset[1]);
     b[2] = -(x[1] + 0.5 * sin(x[2]) + x[3] + x[4] - offset[2]);
     b[3] = -(0.5 * x[1] + x[2] + cos(x[3]) + x[4] - offset[3]);
@@ -78,7 +17,7 @@ void Matrix::getFValue(vector<double>& b, vector<double> offset, vector<double> 
 }
 
 //获得F的导数矩阵
-void Matrix::getFDerivative(vector<vector<double>>& Fd, vector<double> x) {
+void Newton::getFDerivative(vector<vector<double>>& Fd, vector<double> x) {
     Fd[1][1] = -0.5*sin(x[1]);
     Fd[1][2] = 1;
     Fd[1][3] = 1;
@@ -100,7 +39,7 @@ void Matrix::getFDerivative(vector<vector<double>>& Fd, vector<double> x) {
     Fd[4][4] = cos(x[4]);
 }
 
-void Matrix::solveEquations(vector<vector<double>>& mat, vector<double>& b, vector<double>& x)
+void Newton::solveEquations(vector<vector<double>>& mat, vector<double>& b, vector<double>& x)
 {
     for(int k = 1; k < matSize; k++) {
         int i = k;
@@ -129,11 +68,11 @@ void Matrix::solveEquations(vector<vector<double>>& mat, vector<double>& b, vect
         for(int j = k+1; j <= matSize; j++)
             x[k] -= mat[k][j]*x[j];
         x[k] += b[k];
-        x[k] = x[k]/mat[k][k];
+        x[k] = x[k] / mat[k][k];
     }
 }
 
-double Matrix::getNorm(vector<double> vec) {
+double Newton::getNorm(vector<double> vec) {
     double temp = 0;
     for(int i = 0; i < matSize; i++) {
         if(temp < fabs(vec[i])) {
@@ -145,7 +84,7 @@ double Matrix::getNorm(vector<double> vec) {
 }
 
 //Newton法解非线性方程组
-void  Matrix::Newton(vector<double>& x, vector<double> offset) {
+void  Newton::newton(vector<double>& x, vector<double> offset) {
     vector<double> delta_x = vector<double>(matSize + 1);
     vector<double> tempx = vector<double>(matSize + 1);
     vector<double> F = vector<double>(matSize + 1);

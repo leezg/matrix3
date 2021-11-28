@@ -1,6 +1,7 @@
-#include "matrix.h"
+#include "Newton.h"
 
 int main() {
+    system("chcp 65001");
     vector<vector<double>> t, u, z;
     vector<double> offset = vector<double>(matSize + 1);
     vector<double> x = vector<double>(matSize + 1);
@@ -8,7 +9,7 @@ int main() {
     initMat(u, 11, 21);
     initMat(z, 11, 21);
 
-    Matrix matrix = Matrix();
+    Newton newton = Newton();
     int kvalue = 0;
     for (int i = 0; i <= 10; i++) {
         for (int j = 0; j <= 20; j++) {
@@ -16,7 +17,7 @@ int main() {
             offset[2] = 1.07 + 0.5 + 0.05 * j;
             offset[3] = 3.74 + 0.08 * i;
             offset[4] = 0.79 + 0.5 + 0.05 * j;
-            matrix.Newton(x, offset);
+            newton.newton(x, offset);
             t[i][j] = x[1];
             u[i][j] = x[2];
         }
@@ -36,7 +37,7 @@ int main() {
             offset[2] = 1.07 + 0.5 + 0.2 * j;
             offset[3] = 3.74 + 0.1 * i;
             offset[4] = 0.79 + 0.5 + 0.2 * j;
-            matrix.Newton(x, offset);
+            newton.newton(x, offset);
             t[i-1][j-1] = x[1];
             u[i-1][j-1] = x[2];
         }

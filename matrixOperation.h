@@ -11,7 +11,7 @@
 #include <cstdio>
 #include <iomanip>
 #define E pow(10, -12)
-#define matSize 10
+#define matSize 4
 #define maxIterTimes 1000
 #define SIGMA pow(10, -7)
 
