@@ -20,6 +20,7 @@ vector<vector<double>> transposeMat(vector<vector<double>> A) {
             A_T[j][i] = A[i][j];
         }
     }
+    return A_T;
 }
 
 void matrixMult(vector<vector<double>> ma, vector<vector<double>> mb, vector<vector<double>>& ms)  {
@@ -35,7 +36,7 @@ void matrixMult(vector<vector<double>> ma, vector<vector<double>> mb, vector<vec
     }
 }
 
-void inverseMat(vector<vector<double>> A, vector<vector<double>> result)
+void inverseMat(vector<vector<double>>& A, vector<vector<double>>& result)
 {
     vector<vector<double>> A_temp = A;
     for(int i = 0; i < A.size(); i++)
@@ -109,7 +110,7 @@ vector<vector<double>> fitSurface(vector<vector<double>> z, int& kvalue) {
         sigma = 0;
         vector<vector<double>> B_temp;
         vector<vector<double>> G_temp;
-        for (int j = 0; j < i; j++) {
+        for (int j = 0; j < i + 1; j++) {
             B_temp.push_back(B[j]);
             G_temp.push_back(G[j]);
         }
@@ -121,13 +122,13 @@ vector<vector<double>> fitSurface(vector<vector<double>> z, int& kvalue) {
         matrixMult(B_temp, B_T, BB);
         matrixMult(G_temp, G_T, GG);
 
-        inverseMat(BB, B_temp);
-        inverseMat(GG, G_T);
+        inverseMat(BB, B_T);
+        inverseMat(GG, G_temp);
 
-        matrixMult(B_temp, B_T, BB);
+        matrixMult(B_T, B_temp, BB);
         matrixMult(BB, z, GG);
-        matrixMult(GG, G_temp, BB);
-        matrixMult(BB, G_T, C);
+        matrixMult(GG, G_T, BB);
+        matrixMult(BB, G_temp, C);
 
         for(int j = 0; j < xs; j++) {
             for(int k = 0; k < ys; k++) {
