@@ -94,6 +94,9 @@ vector<vector<double>> fitSurface(vector<vector<double>> z, int& kvalue) {
         B.push_back(vector<double>(xs));
         G.push_back(vector<double>(ys));
     }
+    for (int i = 0; i < xs; i++) {
+        P.push_back(vector<double>(ys));
+    }
 
     for (int i = 0; i < num; i++) {
         for (int j = 0; j < xs; j++) {
@@ -125,18 +128,33 @@ vector<vector<double>> fitSurface(vector<vector<double>> z, int& kvalue) {
         inverseMat(BB, B_T);
         inverseMat(GG, G_temp);
 
-        matrixMult(B_T, B_temp, BB);
+        vector<vector<double>> subB_T;
+        for (int j = 0; j <= i; j++) {
+            subB_T.push_back(B_T[j]);
+        }
+
+        matrixMult(subB_T, B_temp, BB);
         matrixMult(BB, z, GG);
         matrixMult(GG, G_T, BB);
-        matrixMult(BB, G_temp, C);
 
+        vector<vector<double>> subG_temp;
+        for (int j = 0; j <= i; j++) {
+            subG_temp.push_back(vector<double>(i + 1));
+            for (int k = 0; k <= i; k++) {
+                subG_temp[j][k] = G_temp[j][k];
+            }
+        }
+
+        matrixMult(BB, subG_temp, C);
+
+        int kkkk = 0;
         for(int j = 0; j < xs; j++) {
             for(int k = 0; k < ys; k++) {
                 double temp = 0;
-                for(int p = 0; p < i+1; p++) {
-                    for(int q = 0; q < i+1; q++) {
+                for(int p = 0; p < i + 1; p++) {
+                    for(int q = 0; q < i + 1; q++) {
                         //TODO: maybe bug
-                        temp += C[p][q] * B[j][p] * G[k][q];
+                        temp += C[p][q] * B[p][j] * G[q][k];
                     }
 
                 }
