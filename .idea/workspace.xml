@@ -11,9 +11,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="276228a6-8549-453d-b9c7-eab1e70efb1d" name="Changes" comment="fix some bugs">
+    <list default="true" id="5ae7a79e-f3ef-410e-aaa1-4169dd005cbf" name="Changes" comment="code form">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/matrixOperation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/matrixOperation.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matrixOperation.h" beforeDir="false" afterPath="$PROJECT_DIR$/matrixOperation.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +57,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="276228a6-8549-453d-b9c7-eab1e70efb1d" name="Changes" comment="" />
+      <changelist id="5ae7a79e-f3ef-410e-aaa1-4169dd005cbf" name="Changes" comment="code form" />
       <created>1638088209173</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -64,6 +65,7 @@
       <workItem from="1638088210901" duration="2561000" />
       <workItem from="1638155861469" duration="40000" />
       <workItem from="1638167551284" duration="4799000" />
+      <workItem from="1638256073869" duration="526000" />
     </task>
     <task id="LOCAL-00001" summary="fix some bugs">
       <created>1638155890614</created>
@@ -93,21 +95,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fix some bugs" />
     <option name="LAST_COMMIT_MESSAGE" value="fix some bugs" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/matrixOperation.cpp</url>
-          <line>165</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/matrixOperation.cpp</url>
-          <line>149</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

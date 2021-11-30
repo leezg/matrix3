@@ -147,7 +147,6 @@ vector<vector<double>> fitSurface(vector<vector<double>> z, int& kvalue) {
 
         matrixMult(BB, subG_temp, C);
 
-        int kkkk = 0;
         for(int j = 0; j < xs; j++) {
             for(int k = 0; k < ys; k++) {
                 double temp = 0;
@@ -225,7 +224,7 @@ void interpolate(vector<vector<double>>& t, vector<vector<double>>& u, vector<ve
             z[i][j] = 0;
             for(int k = xp - 1; k <= xp + 1; k++) {
                 double lk = 1;
-                for(int ti = xp-1; ti <= xp + 1; ti++) {
+                for(int ti = xp - 1; ti <= xp + 1; ti++) {
                     if(ti != k) {
                         lk *= (t[i][j] - tt[ti]) / (tt[k] - tt[ti]);
                     }

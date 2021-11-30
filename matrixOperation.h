@@ -17,16 +17,8 @@
 
 using namespace std;
 
-struct ComplexNumber {
-    double Re;
-    double Im;
-};
-
-double sgn(double);
 void interpolate(vector<vector<double>>&, vector<vector<double>>&, vector<vector<double>>&, int, int);
 vector<vector<double>> fitSurface(vector<vector<double>>, int&);
 void initMat(vector<vector<double>>&, int, int);
-
-const static string answerPath = "C:\\Users\\lee\\Desktop\\math\\matrix3\\answer.txt";
 
 #endif //MATRIX_MATRIXOPERATION_H
